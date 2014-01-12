@@ -22,6 +22,18 @@ function showValues(ThaiWord, Pronounce, Translations) {
     }
 }
 
+function createElement( str ) {
+    var frag = document.createDocumentFragment();
+
+    var elem = document.createElement('div');
+    elem.innerHTML = str;
+
+    while (elem.childNodes[0]) {
+        frag.appendChild(elem.childNodes[0]);
+    }
+    return frag;
+}
+
 function newClosure(ThaiWord, Pronounce, Translations, number) {
 // Local variables that end up within closure
     var myTW = ThaiWord;
@@ -29,11 +41,11 @@ function newClosure(ThaiWord, Pronounce, Translations, number) {
     var myT  = Translations;
     var myN  = number;
     return function() { 
-            alert('Hi! You have chosen #:'+myN+'('+myTW+', '+myP+', '+myT[0].innerText+')');  };
+            alert('You have clicked item #'+myN+'\n'+myTW+'\n'+myP+'\n'+myT[0].innerText);  };
 }
 
 function callBack(ThaiWord, Pronounce, Translations, i) {
-    alert('Hi! You have chosen #:'+i+'('+ThaiWord+', '+Pronounce+', '+Translations[0].innerText+')');
+    alert('You have clicked item #'+i+':\n'+ThaiWord+'\n '+Pronounce+'\n '+Translations[0].innerText);
 }
 
 if (document.getElementById("meaningsCount")==null) { 
@@ -47,7 +59,7 @@ if (document.getElementById("meaningsCount")==null) {
         // Insert action text
         var newdiv = null;
         newdiv=document.createElement("DIV");
-        newdiv.appendChild(document.createTextNode("<ACTION CLICK: "+i+">"));
+        newdiv.appendChild(document.createTextNode("[ACTION "+i+"]"));
         newdiv.onclick = newClosure(ThaiWord, Pronounce, Translations, i);
         document.getElementById('reverseSearchLoading').getElementsByClassName('stripeMe')[i].appendChild(newdiv);
     }
