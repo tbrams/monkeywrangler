@@ -76,3 +76,5 @@ if (document.getElementById("meaningsCount")==null) {
     newdiv.onclick = function(){ alert('Hi!'); };
     document.getElementById('meaningsLoading').appendChild(newdiv);
 }
+
+// Added a comment to see how I get this merged in on the client side after fetching updates
