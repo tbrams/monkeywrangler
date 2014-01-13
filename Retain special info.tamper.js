@@ -7,6 +7,13 @@
 // @copyright  2014+ Torben Brams
 // ==/UserScript==
 
+// Inject the api into the document - require does not worl for some reason
+var head = document.getElementsByTagName('head')[0];
+var script = document.createElement('script');
+script.type = 'text/javascript';
+script.src = "https://apis.google.com/js/client.js?onload=init";
+head.appendChild(script);
+
 var Translations=null;
 var ThaiWord=null;
 var Pronounce=null;
@@ -24,20 +31,52 @@ function showValues(ThaiWord, Pronounce, Translations) {
 
 function createElement( str ) {
     var frag = document.createDocumentFragment();
-
+    
     var elem = document.createElement('div');
     elem.innerHTML = str;
-
+    
     while (elem.childNodes[0]) {
         frag.appendChild(elem.childNodes[0]);
     }
     return frag;
 }
 
+var clientId = '571991725551-4cesoc9msrt6njcv5dc20pa9pv7cvaon.apps.googleusercontent.com';
+var apiKey = 'AIzaSyC5pq_4wFNn6A62OLxNZjlzYD0hFjwPQVM';
+var scopes = 'https://www.googleapis.com/auth/fusiontables';
+var tableId;
+
+// Initialize the client
+function init() {
+    gapi.client.setApiKey(apiKey);
+    window.setTimeout(function() { auth(true); }, 1);
+}
+
+// Run OAuth 2.0 authorization.
+function auth(immediate) {
+    gapi.auth.authorize({
+        client_id: clientId,
+        scope: scopes,
+        immediate: immediate
+    }, handleAuthResult);
+}
+
+// Handle the results of the OAuth 2.0 flow.
+function handleAuthResult(authResult) {
+    if (authResult) {
+        alert("we are in")
+    } else {
+        alert("login failed")
+    }
+}
+
+
+
 function newClosure(ThaiWord, Pronounce, Translations, number) {
     return function() { 
-            alert('You have clicked item #'+number+'\n'+ThaiWord+'\n'+Pronounce+'\n'+Translations[0].innerText);  };
+        alert('You have clicked item #'+number+'\n'+ThaiWord+'\n'+Pronounce+'\n'+Translations[0].innerText);  };
 }
+
 
 function callBack(ThaiWord, Pronounce, Translations, i) {
     alert('You have clicked item #'+i+':\n'+ThaiWord+'\n '+Pronounce+'\n '+Translations[0].innerText);
