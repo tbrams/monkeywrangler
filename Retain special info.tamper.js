@@ -35,13 +35,8 @@ function createElement( str ) {
 }
 
 function newClosure(ThaiWord, Pronounce, Translations, number) {
-// Local variables that end up within closure
-    var myTW = ThaiWord;
-    var myP  = Pronounce;
-    var myT  = Translations;
-    var myN  = number;
     return function() { 
-            alert('You have clicked item #'+myN+'\n'+myTW+'\n'+myP+'\n'+myT[0].innerText);  };
+            alert('You have clicked item #'+number+'\n'+ThaiWord+'\n'+Pronounce+'\n'+Translations[0].innerText);  };
 }
 
 function callBack(ThaiWord, Pronounce, Translations, i) {
