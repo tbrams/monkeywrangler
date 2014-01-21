@@ -7,12 +7,12 @@
 // @copyright  2014+ Torben Brams
 // ==/UserScript==
 
-// Inject the api into the document - require does not worl for some reason
-var head = document.getElementsByTagName('head')[0];
-var script = document.createElement('script');
-script.type = 'text/javascript';
-script.src = "https://apis.google.com/js/client.js?onload=init";
-head.appendChild(script);
+// Inject the api into the document - require does not work for some reason
+//var head = document.getElementsByTagName('head')[0];
+//var script = document.createElement('script');
+//script.type = 'text/javascript';
+//script.src = "https://apis.google.com/js/client.js?onload=init";
+//head.appendChild(script);
 
 var Translations=null;
 var ThaiWord=null;
@@ -41,45 +41,25 @@ function createElement( str ) {
     return frag;
 }
 
-var clientId = '571991725551-4cesoc9msrt6njcv5dc20pa9pv7cvaon.apps.googleusercontent.com';
-var apiKey = 'AIzaSyC5pq_4wFNn6A62OLxNZjlzYD0hFjwPQVM';
-var scopes = 'https://www.googleapis.com/auth/fusiontables';
-var tableId;
 
 // Initialize the client
-function init() {
-    gapi.client.setApiKey(apiKey);
-    window.setTimeout(function() { auth(true); }, 1);
-}
-
-// Run OAuth 2.0 authorization.
-function auth(immediate) {
-    gapi.auth.authorize({
-        client_id: clientId,
-        scope: scopes,
-        immediate: immediate
-    }, handleAuthResult);
-}
-
-// Handle the results of the OAuth 2.0 flow.
-function handleAuthResult(authResult) {
-    if (authResult) {
-        alert("we are in")
-    } else {
-        alert("login failed")
-    }
-}
-
+//function init() {
+//    console.log("@init finally..");
+//    gapi.client.setApiKey(apiKey);
+//    window.setTimeout(function() { auth(true); }, 1);
+//}
 
 
 function newClosure(ThaiWord, Pronounce, Translations, number) {
     return function() { 
-        alert('You have clicked item #'+number+'\n'+ThaiWord+'\n'+Pronounce+'\n'+Translations[0].innerText);  };
+        alert('You have clicked item #'+number+'\n'+ThaiWord+'\n'+Pronounce+'\n'+Translations[0].innerText);  
+        fetchLine(ThaiWord, Pronounce, Translations[0]);        
+    }; 
 }
 
 
 function callBack(ThaiWord, Pronounce, Translations, i) {
-    alert('You have clicked item #'+i+':\n'+ThaiWord+'\n '+Pronounce+'\n '+Translations[0].innerText);
+    //alert('You have clicked item #'+i+':\n'+ThaiWord+'\n '+Pronounce+'\n '+Translations[0].innerText);
 }
 
 if (document.getElementById("meaningsCount")==null) { 
@@ -112,3 +92,50 @@ if (document.getElementById("meaningsCount")==null) {
 }
 
 // Added a comment to see how I get this merged in on the client side after fetching updates
+
+function fetchLine(t,p,e) {
+    console.log("fetchLine initiated...");
+    xmlHttp=GetXmlHttpObject();
+    
+    if (xmlHttp==null)  {
+        alert ("Browser does not support HTTP Request");
+        return;
+    } 
+    
+    var url="http://brams/flashcards/insert_data.php";
+    url=url+"?T="+t;
+    url=url+"&P="+p;
+    url=url+"&E="+e;
+    url=url+"&sid="+Math.random();
+    xmlHttp.onreadystatechange=stateChanged; 
+    xmlHttp.open("GET",url,true);
+    xmlHttp.send(null);
+} 
+
+function stateChanged() { 
+    console.log("stateChanged initiated...");
+    
+    if (xmlHttp.readyState==4 || xmlHttp.readyState=="complete") { 
+        document.getElementById("output").innerHTML=xmlHttp.responseText;
+    } 
+}
+
+function GetXmlHttpObject() {
+    console.log("GetXmlHttpObject initiated...");
+    
+    var xmlHttp=null;
+    try {
+        // Firefox, Opera 8.0+, Safari
+        xmlHttp=new XMLHttpRequest();
+    }
+    catch (e) {
+        // Internet Explorer
+        try {
+            xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
+        }
+        catch (e) {
+            xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+    }
+    return xmlHttp;
+}
