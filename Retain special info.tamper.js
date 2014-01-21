@@ -42,25 +42,23 @@ function createElement( str ) {
 }
 
 
-// Initialize the client
-//function init() {
-//    console.log("@init finally..");
-//    gapi.client.setApiKey(apiKey);
-//    window.setTimeout(function() { auth(true); }, 1);
-//}
-
+function generateList(Translations) {
+	var myList="<ul>";
+    for (k=0, len2=Translations.length;k<len2;k++) {
+        myList+="<li>"+Translations[k].innerText+"</li>";
+    }
+    myList+="</ul>";
+    console.log('Translation list:'+myList);
+    return myList;	
+}
 
 function newClosure(ThaiWord, Pronounce, Translations, number) {
     return function() { 
         alert('You have clicked item #'+number+'\n'+ThaiWord+'\n'+Pronounce+'\n'+Translations[0].innerText);  
-        fetchLine(ThaiWord, Pronounce, Translations[0]);        
+        fetchLine(ThaiWord, Pronounce, generateList(Translations));        
     }; 
 }
 
-
-function callBack(ThaiWord, Pronounce, Translations, i) {
-    //alert('You have clicked item #'+i+':\n'+ThaiWord+'\n '+Pronounce+'\n '+Translations[0].innerText);
-}
 
 if (document.getElementById("meaningsCount")==null) { 
     //We have many suggestions in a list     
@@ -116,7 +114,8 @@ function stateChanged() {
     console.log("stateChanged initiated...");
     
     if (xmlHttp.readyState==4 || xmlHttp.readyState=="complete") { 
-        document.getElementById("output").innerHTML=xmlHttp.responseText;
+       // document.getElementById("output").innerHTML=xmlHttp.responseText;
+        console.log("xmlHttp.responseText: "+xmlHttp.responseText);
     } 
 }
 
